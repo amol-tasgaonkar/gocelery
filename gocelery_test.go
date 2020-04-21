@@ -600,9 +600,9 @@ func TestFloatNamedArguments(t *testing.T) {
 // TestFloat32 tests successful function execution
 // with float32 arguments and return value
 // Bug(sickyoon): float32 as an argument throws a panic
-// https://github.com/gocelery/gocelery/issues/75
+// https://github.com/amol-tasgaonkar/gocelery/issues/75
 func TestFloat32(t *testing.T) {
-	t.Skip("Bug(sickyoon): float32 as an argument throws a panic: https://github.com/gocelery/gocelery/issues/75")
+	t.Skip("Bug(sickyoon): float32 as an argument throws a panic: https://github.com/amol-tasgaonkar/gocelery/issues/75")
 	testCases := []struct {
 		name     string
 		broker   CeleryBroker
@@ -670,9 +670,9 @@ func TestFloat32(t *testing.T) {
 // TestFloat32NamedArguments tests successful function execution
 // with float32 arguments and return value
 // Bug(sickyoon): float32 as an argument throws a panic
-// https://github.com/gocelery/gocelery/issues/75
+// https://github.com/amol-tasgaonkar/gocelery/issues/75
 func TestFloat32NamedArguments(t *testing.T) {
-	t.Skip("Bug(sickyoon): float32 as an argument throws a panic: https://github.com/gocelery/gocelery/issues/75")
+	t.Skip("Bug(sickyoon): float32 as an argument throws a panic: https://github.com/amol-tasgaonkar/gocelery/issues/75")
 	testCases := []struct {
 		name     string
 		broker   CeleryBroker
@@ -886,7 +886,7 @@ func TestBoolNamedArguments(t *testing.T) {
 // TestArrayIntNamedArguments tests successful function execution
 // with array arguments and integer return value
 func TestArrayIntNamedArguments(t *testing.T) {
-	t.Skip("Bug(sickyoon): array as an argument returns nil: https://github.com/gocelery/gocelery/issues/74")
+	t.Skip("Bug(sickyoon): array as an argument returns nil: https://github.com/amol-tasgaonkar/gocelery/issues/74")
 	testCases := []struct {
 		name     string
 		broker   CeleryBroker
@@ -960,7 +960,7 @@ func TestArrayIntNamedArguments(t *testing.T) {
 // TestArray tests successful function execution
 // with array arguments and return value
 func TestArray(t *testing.T) {
-	t.Skip("Bug(sickyoon): array as an argument returns nil: https://github.com/gocelery/gocelery/issues/74")
+	t.Skip("Bug(sickyoon): array as an argument returns nil: https://github.com/amol-tasgaonkar/gocelery/issues/74")
 	testCases := []struct {
 		name     string
 		broker   CeleryBroker
@@ -1028,7 +1028,7 @@ func TestArray(t *testing.T) {
 // TestMap tests successful function execution
 // with map arguments and return value
 func TestMap(t *testing.T) {
-	t.Skip("Bug(sickyoon): map as an argument returns nil: https://github.com/gocelery/gocelery/issues/74")
+	t.Skip("Bug(sickyoon): map as an argument returns nil: https://github.com/amol-tasgaonkar/gocelery/issues/74")
 	testCases := []struct {
 		name     string
 		broker   CeleryBroker
@@ -1240,7 +1240,7 @@ func (a *addFloatTask) RunTask() (interface{}, error) {
 }
 
 // Bug(sickyoon): float32 as am argument throws a panic
-// https://github.com/gocelery/gocelery/issues/75
+// https://github.com/amol-tasgaonkar/gocelery/issues/75
 
 // addFloat32 returns sum of two float32 values
 func addFloat32(a, b float32) float32 {

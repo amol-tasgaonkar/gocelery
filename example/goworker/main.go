@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gocelery/gocelery"
+	"github.com/amol-tasgaonkar/gocelery"
 	"github.com/gomodule/redigo/redis"
 )
 
