@@ -52,12 +52,16 @@ func (w *CeleryWorker) StartWorkerWithContext(ctx context.Context) {
 				case <-ticker.C:
 					// process task request
 					taskMessage, err := w.broker.GetTaskMessage()
-					if err != nil || taskMessage == nil {
+					if err != nil {
+						//fmt.Println("AMOL::Error to run the task message, err: ", err)
+						continue
+					}
+					if taskMessage == nil {
 						continue
 					}
 
 					// run task
-					resultMsg, err := w.RunTask(taskMessage)
+					resultMsg, err := w.RunTask(taskMessage, workerID)
 					if err != nil {
 						log.Printf("failed to run task message %s: %+v", taskMessage.ID, err)
 						continue
@@ -117,7 +121,7 @@ func (w *CeleryWorker) GetTask(name string) interface{} {
 }
 
 // RunTask runs celery task
-func (w *CeleryWorker) RunTask(message *TaskMessage) (*ResultMessage, error) {
+func (w *CeleryWorker) RunTask(message *TaskMessage, workerId int) (*ResultMessage, error) {
 
 	// get task
 	task := w.GetTask(message.Task)
@@ -127,14 +131,20 @@ func (w *CeleryWorker) RunTask(message *TaskMessage) (*ResultMessage, error) {
 
 	// convert to task interface
 	taskInterface, ok := task.(CeleryTask)
+
 	if ok {
-		if err := taskInterface.ParseKwargs(message.Kwargs); err != nil {
-			return nil, err
-		}
-		val, err := taskInterface.RunTask()
+
+		// AMOL_TDB: Handle error can be much better here.
+		err := taskInterface.ParseKwargs(message.Kwargs, message.Args, workerId)
 		if err != nil {
 			return nil, err
 		}
+
+		val, err := taskInterface.RunTask(workerId)
+		if err != nil {
+			return nil, err
+		}
+
 		return getResultMessage(val), err
 	}
 

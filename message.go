@@ -7,6 +7,7 @@ package gocelery
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"log"
 	"reflect"
 	"sync"
@@ -154,13 +155,17 @@ func releaseTaskMessage(v *TaskMessage) {
 
 // DecodeTaskMessage decodes base64 encrypted body and return TaskMessage object
 func DecodeTaskMessage(encodedBody string) (*TaskMessage, error) {
+	//fmt.Println("Amol::Encoded Body : ", encodedBody)
 	body, err := base64.StdEncoding.DecodeString(encodedBody)
 	if err != nil {
+		fmt.Println("AMOL::Error while base64 decodingString for body")
 		return nil, err
 	}
+	//fmt.Println("Amol::Message Body : ", hex.Dump(body))
 	message := taskMessagePool.Get().(*TaskMessage)
 	err = json.Unmarshal(body, message)
 	if err != nil {
+		fmt.Println("AMOL::Error while creating Json from the message")
 		return nil, err
 	}
 	return message, nil
