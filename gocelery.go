@@ -109,6 +109,9 @@ func (cc *CeleryClient) delay(task *TaskMessage) (*AsyncResult, error) {
 // ResultMessage must be obtained using GetResultMessage()
 type CeleryTask interface {
 
+	// GetNew - Retrieves a new Factory Pointer to execute task.
+	GetNew(int) (interface{}, error)
+
 	// ParseKwargs - define a method to parse kwargs & Args
 	ParseKwargs(map[string]interface{}, []interface{}, int) error
 

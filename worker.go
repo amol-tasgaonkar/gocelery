@@ -121,7 +121,7 @@ func (w *CeleryWorker) GetTask(name string) interface{} {
 }
 
 // RunTask runs celery task
-func (w *CeleryWorker) RunTask(message *TaskMessage, workerId int) (*ResultMessage, error) {
+func (w *CeleryWorker) RunTask(message *TaskMessage, workerID int) (*ResultMessage, error) {
 
 	// get task
 	task := w.GetTask(message.Task)
@@ -129,23 +129,33 @@ func (w *CeleryWorker) RunTask(message *TaskMessage, workerId int) (*ResultMessa
 		return nil, fmt.Errorf("task %s is not registered", message.Task)
 	}
 
-	// convert to task interface
+	// convert to task to celery interface
 	taskInterface, ok := task.(CeleryTask)
-
 	if ok {
 
-		// AMOL_TDB: Handle error can be much better here.
-		err := taskInterface.ParseKwargs(message.Kwargs, message.Args, workerId)
+		newTask, err := taskInterface.GetNew(workerID)
 		if err != nil {
 			return nil, err
 		}
 
-		val, err := taskInterface.RunTask(workerId)
-		if err != nil {
-			return nil, err
-		}
+		// convert to new task to celery interface
+		newTaskInterface, ok  := newTask.(CeleryTask)
 
-		return getResultMessage(val), err
+		if ok {
+
+			// AMOL_TDB: Handle error can be much better here.
+			err = newTaskInterface.ParseKwargs(message.Kwargs, message.Args, workerID)
+			if err != nil {
+				return nil, err
+			}
+
+			val, err := newTaskInterface.RunTask(workerID)
+			if err != nil {
+				return nil, err
+			}
+
+			return getResultMessage(val), err
+		}
 	}
 
 	// use reflection to execute function ptr
