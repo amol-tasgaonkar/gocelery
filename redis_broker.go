@@ -20,16 +20,14 @@ type RedisCeleryBroker struct {
 
 // NewRedisBroker creates new RedisCeleryBroker with given redis connection pool
 func NewRedisBroker(conn *redis.Pool) *RedisCeleryBroker {
-	fmt.Println("***** Updated the QueueName, salesforce_queue ****** ")
 	return &RedisCeleryBroker{
 		Pool:      conn,
-		queueName: "salesforce_queue",
+		queueName: "default_queue",
 	}
 }
 
 // NewRedisBroker creates new RedisCeleryBroker with given redis connection pool
 func NewRedisBrokerWithQueueName(conn *redis.Pool, queueName *string) *RedisCeleryBroker {
-	fmt.Println("***** Updated the QueueName, salesforce_queue ****** ")
 	return &RedisCeleryBroker{
 		Pool:      conn,
 		queueName: *queueName,
