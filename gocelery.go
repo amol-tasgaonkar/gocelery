@@ -44,13 +44,13 @@ func (cc *CeleryClient) Register(name string, task interface{}) {
 }
 
 // StartWorkerWithContext starts celery workers with given parent context
-func (cc *CeleryClient) StartWorkerWithContext(ctx context.Context) {
-	cc.worker.StartWorkerWithContext(ctx)
+func (cc *CeleryClient) StartWorkerWithContext(appCtx context.Context) {
+	cc.worker.StartWorkerWithContext(appCtx)
 }
 
 // StartWorker starts celery workers
-func (cc *CeleryClient) StartWorker(appCtx context.Context) {
-	cc.worker.StartWorker(appCtx)
+func (cc *CeleryClient) StartWorker() {
+	cc.worker.StartWorker()
 }
 
 // StopWorker stops celery workers

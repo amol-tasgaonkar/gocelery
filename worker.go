@@ -81,8 +81,8 @@ func (w *CeleryWorker) StartWorkerWithContext(appCtx context.Context) {
 }
 
 // StartWorker starts celery workers
-func (w *CeleryWorker) StartWorker(appCtx context.Context) {
-	w.StartWorkerWithContext(appCtx)
+func (w *CeleryWorker) StartWorker() {
+	w.StartWorkerWithContext(context.Background())
 }
 
 // StopWorker stops celery workers
