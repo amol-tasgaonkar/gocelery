@@ -113,10 +113,10 @@ type CeleryTask interface {
 	GetNew(int) (interface{}, error)
 
 	// ParseKwargs - define a method to parse kwargs & Args
-	ParseKwargs(map[string]interface{}, []interface{}, int) error
+	ParseKwargs(context.Context, map[string]interface{}, []interface{}, int) error
 
 	// RunTask - define a method for execution
-	RunTask(int) (interface{}, error)
+	RunTask(context.Context, int) (interface{}, error)
 }
 
 // AsyncResult represents pending result

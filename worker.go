@@ -37,9 +37,9 @@ func NewCeleryWorker(broker CeleryBroker, backend CeleryBackend, numWorkers int)
 }
 
 // StartWorkerWithContext starts celery worker(s) with given parent context
-func (w *CeleryWorker) StartWorkerWithContext(ctx context.Context) {
+func (w *CeleryWorker) StartWorkerWithContext(appCtx context.Context) {
 	var wctx context.Context
-	wctx, w.cancel = context.WithCancel(ctx)
+	wctx, w.cancel = context.WithCancel(appCtx)
 	w.workWG.Add(w.numWorkers)
 	for i := 0; i < w.numWorkers; i++ {
 		go func(workerID int) {
@@ -61,7 +61,7 @@ func (w *CeleryWorker) StartWorkerWithContext(ctx context.Context) {
 					}
 
 					// run task
-					resultMsg, err := w.RunTask(taskMessage, workerID)
+					resultMsg, err := w.RunTask(appCtx, taskMessage, workerID)
 					if err != nil {
 						log.Printf("failed to run task message %s: %+v", taskMessage.ID, err)
 						continue
@@ -81,8 +81,8 @@ func (w *CeleryWorker) StartWorkerWithContext(ctx context.Context) {
 }
 
 // StartWorker starts celery workers
-func (w *CeleryWorker) StartWorker() {
-	w.StartWorkerWithContext(context.Background())
+func (w *CeleryWorker) StartWorker(appCtx context.Context) {
+	w.StartWorkerWithContext(appCtx)
 }
 
 // StopWorker stops celery workers
@@ -121,7 +121,7 @@ func (w *CeleryWorker) GetTask(name string) interface{} {
 }
 
 // RunTask runs celery task
-func (w *CeleryWorker) RunTask(message *TaskMessage, workerID int) (*ResultMessage, error) {
+func (w *CeleryWorker) RunTask(appCtx context.Context, message *TaskMessage, workerID int) (*ResultMessage, error) {
 
 	// get task
 	task := w.GetTask(message.Task)
@@ -144,12 +144,12 @@ func (w *CeleryWorker) RunTask(message *TaskMessage, workerID int) (*ResultMessa
 		if ok {
 
 			// AMOL_TDB: Handle error can be much better here.
-			err = newTaskInterface.ParseKwargs(message.Kwargs, message.Args, workerID)
+			err = newTaskInterface.ParseKwargs(appCtx, message.Kwargs, message.Args, workerID)
 			if err != nil {
 				return nil, err
 			}
 
-			val, err := newTaskInterface.RunTask(workerID)
+			val, err := newTaskInterface.RunTask(appCtx, workerID)
 			if err != nil {
 				return nil, err
 			}
