@@ -133,29 +133,13 @@ func (w *CeleryWorker) RunTask(appCtx context.Context, message *TaskMessage, wor
 	taskInterface, ok := task.(CeleryTask)
 	if ok {
 
-		newTask, err := taskInterface.GetNew(workerID)
+		val, err := taskInterface.RunTask(appCtx, message.Kwargs, message.Args, workerID)
 		if err != nil {
 			return nil, err
 		}
 
-		// convert to new task to celery interface
-		newTaskInterface, ok  := newTask.(CeleryTask)
-
-		if ok {
-
-			// AMOL_TDB: Handle error can be much better here.
-			err = newTaskInterface.ParseKwargs(appCtx, message.Kwargs, message.Args, workerID)
-			if err != nil {
-				return nil, err
-			}
-
-			val, err := newTaskInterface.RunTask(appCtx, workerID)
-			if err != nil {
-				return nil, err
-			}
-
-			return getResultMessage(val), err
-		}
+		return getResultMessage(val), err
+		
 	}
 
 	// use reflection to execute function ptr
